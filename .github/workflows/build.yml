@@ -19,7 +19,7 @@ jobs:
       - name: Restore
         run: dotnet restore RobloxAccountManager.sln
       - name: Build
-        run: dotnet build RobloxAccountManager.sln --configuration Release --no-restore --platform x64
+        run: dotnet build RobloxAccountManager.sln --configuration Release --no-restore -p:Platform=x64
       - name: Test
         run: dotnet test tests/RobloxAccountManager.Tests/RobloxAccountManager.Tests.csproj --configuration Release --no-build
       - name: Publish
