@@ -1,4 +1,4 @@
-# Roblox Account Manager
+# Chiro Manager
 
 Roblox Account Manager is an independent, local-first Windows 10/11 application for organizing Roblox account profiles, public game shortcuts, launch history, and multi-launch planning.
 
