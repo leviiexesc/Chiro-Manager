@@ -1,0 +1,34 @@
+name: Release Windows application
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore RobloxAccountManager.sln
+      - name: Build
+        run: dotnet build RobloxAccountManager.sln --configuration Release --no-restore --platform x64
+      - name: Test
+        run: dotnet test tests/RobloxAccountManager.Tests/RobloxAccountManager.Tests.csproj --configuration Release --no-build
+      - name: Publish
+        run: dotnet publish src/RobloxAccountManager/RobloxAccountManager.csproj --configuration Release --runtime win-x64 --self-contained false --output artifacts/publish
+      - name: Package
+        shell: pwsh
+        run: Compress-Archive -Path artifacts/publish/* -DestinationPath RobloxAccountManager-Windows-x64.zip
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: RobloxAccountManager-Windows-x64.zip
+          generate_release_notes: true

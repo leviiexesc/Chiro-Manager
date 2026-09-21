@@ -1,0 +1,34 @@
+name: Build Windows application
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore RobloxAccountManager.sln
+      - name: Build
+        run: dotnet build RobloxAccountManager.sln --configuration Release --no-restore --platform x64
+      - name: Test
+        run: dotnet test tests/RobloxAccountManager.Tests/RobloxAccountManager.Tests.csproj --configuration Release --no-build
+      - name: Publish
+        run: dotnet publish src/RobloxAccountManager/RobloxAccountManager.csproj --configuration Release --runtime win-x64 --self-contained false --output artifacts/publish
+      - name: Package
+        shell: pwsh
+        run: Compress-Archive -Path artifacts/publish/* -DestinationPath RobloxAccountManager-Windows-x64.zip
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RobloxAccountManager-Windows-x64
+          path: RobloxAccountManager-Windows-x64.zip

@@ -1,0 +1,11 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+artifacts/
+*.pdb
+*.msix
+*.appx
+*.zip
